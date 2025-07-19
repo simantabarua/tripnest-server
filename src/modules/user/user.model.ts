@@ -49,7 +49,7 @@ const userSchema = new Schema<IUser>(
       default: "",
     },
     isDeleted: {
-      type: String,
+      type: Boolean,
       required: false,
       default: "false",
     },
