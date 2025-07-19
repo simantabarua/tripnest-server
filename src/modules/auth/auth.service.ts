@@ -2,7 +2,8 @@ import { StatusCodes } from "http-status-codes";
 import AppError from "../../errorHelper/AppError";
 import { User } from "../user/user.model";
 import bcryptjs from "bcryptjs";
-import jwt from "jsonwebtoken";
+import { envVars } from "../../config/env";
+import { generateToken } from "../../utils/jwt";
 
 const credentialLogin = async (email: string, password: string) => {
   const user = await User.findOne({ email });
@@ -19,9 +20,11 @@ const credentialLogin = async (email: string, password: string) => {
     email: user.email,
     role: user.role,
   };
-  const accessToken = jwt.sign(jwtPayload, "secret", {
-    expiresIn: "1h",
-  });
+  const accessToken = generateToken(
+    jwtPayload,
+    envVars.JWT_ACCESS_SECRET,
+    envVars.JWT_ACCESS_EXPIRES
+  );
 
   return accessToken;
 };

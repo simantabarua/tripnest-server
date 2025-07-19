@@ -1,7 +1,9 @@
+/* eslint-disable no-console */
 import { Server } from "http";
 import mongoose from "mongoose";
 import { envVars } from "./config/env";
 import app from "./app";
+import { seedSuperAdmin } from "./utils/seedSuperAdmin";
 let server: Server;
 
 const startServer = async () => {
@@ -15,15 +17,22 @@ const startServer = async () => {
     console.error("Error starting server:", error);
   }
 };
+(async () => {
+  try {
+    await startServer();
+    await seedSuperAdmin();
+  } catch (error) {
+    console.error("Error during initialization:", error);
+    process.exit(1);
+  }
+})();
 
-startServer();
-
-const gracefulShutdown = (reason: string, code: number = 0) => {
+const gracefulShutdown = (reason: string, code = 0) => {
   console.log(`${reason} received`);
   if (server) {
     server.close(() => {
       console.log("Server closed");
-      process.exit(code)
+      process.exit(code);
     });
   } else {
     process.exit(code);
