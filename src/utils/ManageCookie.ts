@@ -13,3 +13,16 @@ export const setCookies = (res: Response, tokenInfo: TokenInfo) => {
     secure: false,
   });
 };
+
+export const clearCookies = (res: Response) => {
+  res.clearCookie("refreshToken", {
+    httpOnly: false,
+    secure: false,
+    sameSite: "lax",
+  });
+  res.clearCookie("accessToken", {
+    httpOnly: false,
+    secure: false,
+    sameSite: "lax",
+  });
+};
