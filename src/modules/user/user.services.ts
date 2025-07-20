@@ -16,6 +16,7 @@ const createUser = async (payload: Partial<IUser>) => {
       StatusCodes.BAD_REQUEST
     );
   }
+
   const hashedPassword = bcryptjs.hashSync(password as string, 10);
   const authProvider: IAuthProvider = {
     provider: "credentials",
