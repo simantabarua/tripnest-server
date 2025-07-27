@@ -29,4 +29,20 @@ divisionSchema.pre("save", async function (next) {
   next();
 });
 
+divisionSchema.pre("findOneAndUpdate", async function (next) {
+  const update = this.getUpdate() as Partial<IDivision>;
+  if (update.name && !update.slug) {
+    const baseSlug = update.name.toLowerCase().replace(/ /g, "-");
+    let slug = `${baseSlug}-division`;
+    let counter = 1;
+
+    while (await Division.exists({ slug })) {
+      slug = `${slug}-${counter++}`;
+    }
+
+    update.slug = slug;
+  }
+
+  next();
+});
 export const Division = model<IDivision>("Division", divisionSchema);

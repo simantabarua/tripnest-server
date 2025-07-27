@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { UserService } from "./user.services";
+import { UserService } from "./user.service";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import { JwtPayload } from "jsonwebtoken";
@@ -45,7 +45,7 @@ const getAllUsers = catchAsync(
       message: "Users retrieved successfully",
       data: users,
       meta: {
-        totalCount: users.length,
+        total: users.length,
       },
     });
   }

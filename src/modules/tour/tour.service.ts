@@ -1,3 +1,5 @@
+import { QueryBuilder } from "../../utils/QueryBuilder";
+import { tourSearchableFields } from "./tour.constant";
 import { ITour } from "./tour.interface";
 import { Tour, TourType } from "./tour.model";
 
@@ -7,9 +9,6 @@ const createTour = async (payload: ITour) => {
     throw new Error(
       "Tour with this title already exists in the specified division"
     );
-  }
-  if (payload.title) {
-    payload.slug = payload.title.toLowerCase().replace(/ /g, "-");
   }
   const tour = await Tour.create(payload);
   return tour;
@@ -50,9 +49,23 @@ const getTourById = async (tourId: string) => {
   return tour;
 };
 
-const getAllTours = async () => {
-  const tours = await Tour.find();
-  return tours;
+const getAllTours = async (query: Record<string, string>) => {
+  const queryBuilder = new QueryBuilder(Tour.find(), query);
+  const tours = await queryBuilder
+    .search(tourSearchableFields)
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
+  const [data, meta] = await Promise.all([
+    tours.build(),
+    queryBuilder.getMeta(),
+  ]);
+
+  return {
+    data,
+    meta,
+  };
 };
 
 const createTourType = async (name: string) => {

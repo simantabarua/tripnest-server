@@ -38,8 +38,9 @@ const deleteDivision = async (id) => {
   return division;
 };
 
-const getSingleDivision = async (id) => {
-  const division = await Division.findById(id);
+const getSingleDivision = async (slug: string) => {
+  const division = await Division.findOne({ slug });
+
   if (!division) {
     throw new Error("Division not found");
   }

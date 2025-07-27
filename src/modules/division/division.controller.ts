@@ -37,8 +37,8 @@ const deleteDivision = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getSingleDivision = catchAsync(async (req: Request, res: Response) => {
-  const divisionId = req.params.slug;
-  const result = await DivisionService.getSingleDivision(divisionId);
+  const slug = req.params.slug;
+  const result = await DivisionService.getSingleDivision(slug);
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
@@ -54,7 +54,7 @@ const getAllDivisions = catchAsync(async (req: Request, res: Response) => {
     message: "Divisions retrieved",
     data: result,
     meta: {
-      totalCount: result.length,
+      total: result.length,
     },
   });
 });
