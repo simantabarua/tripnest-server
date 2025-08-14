@@ -22,10 +22,11 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cookieParser());
-app.use("/api/v1", router);
 app.get("/", (req: Request, res: Response) => {
   res.status(200).send("Server is running");
 });
+app.use("/api/v1", router);
+
 app.use(globalErrorHandler);
 app.use(notFound);
 export default app;

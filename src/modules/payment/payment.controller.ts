@@ -3,7 +3,6 @@ import { catchAsync } from "../../utils/catchAsync";
 
 const initPayment = catchAsync(async (req: Request, res: Response) => {
     // Empty implementation
-    const d
 });
 
 const successPayment = catchAsync(async (req: Request, res: Response) => {

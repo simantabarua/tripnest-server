@@ -7,8 +7,17 @@ import { createUserZodSchema } from "./user.validated";
 import { envVars } from "../../config/env";
 import { JwtPayload } from "jsonwebtoken";
 
-const createUser = async (payload: Partial<IUser>) => {
-  const { email, password, ...rest } = createUserZodSchema.parse(payload);
+const createUser = async (payload: Partial<IUser> & { confirmPassword?: string }) => {
+  const { email, password, confirmPassword, ...rest } = createUserZodSchema.parse(payload);
+
+  // Check if passwords match
+  if (password !== confirmPassword) {
+    throw new AppError(
+      "Passwords do not match",
+      StatusCodes.BAD_REQUEST
+    );
+  }
+
   const existingUser = await User.findOne({ email });
   if (existingUser) {
     throw new AppError(
@@ -30,8 +39,12 @@ const createUser = async (payload: Partial<IUser>) => {
     role: "USER",
     ...rest,
   });
-  return user;
+
+  const userObj = user.toObject();
+  delete userObj.password;
+  return userObj;
 };
+
 
 const UpdateUser = async (
   userId: string,
